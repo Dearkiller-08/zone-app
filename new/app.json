@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "new",
-    "slug": "new",
+    "name": "zone-app",
+    "slug": "zone-app",
+    "scheme": "zone-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -24,6 +25,9 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-router"
+    ]
   }
 }
