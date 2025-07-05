@@ -25,7 +25,7 @@
     "expo-updates": "~0.26.17",
     "react": "18.3.1",
     "react-native": "0.76.7",
-    "react-native-calendar-picker": "^8.0.4",
+    "react-native-calendar-picker": "^6.1.5",
     "react-native-calendars": "^1.1305.0",
     "react-native-circular-progress": "^1.4.0",
     "react-native-date-picker": "^5.0.4",
@@ -38,7 +38,9 @@
     "react-native-url-polyfill": "^2.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "typescript": "^5.3.3",
+    "@types/react": "~18.3.12"
   },
   "private": true
 }
