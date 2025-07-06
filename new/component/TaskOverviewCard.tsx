@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { theme } from "../theme";
 import AntDesign from '@expo/vector-icons/AntDesign';
 

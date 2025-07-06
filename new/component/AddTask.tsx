@@ -7,9 +7,25 @@ export default function AddTask() {
 
     return (
         <TouchableOpacity
-            onPress={() => router.navigate('/addtaskscreen')} 
-            style={{ marginRight: 10, marginBottom: 5,position: 'absolute', bottom: 0, right: 0 }}>
-            <Ionicons name="add-circle" size={80} color="black" />
+            onPress={() => router.navigate('/addtaskscreen')}
+            style={{
+                position: 'absolute',
+                bottom: 10,
+                right: 30,
+                backgroundColor: 'white',
+                borderRadius: 50,
+                padding: 4,
+                shadowColor: "#000",
+                shadowOffset: {
+                    width: 0,
+                    height: 2,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+                elevation: 5,
+            }} 
+            >
+            <Ionicons name="add-circle" size={50} color="black" />
         </TouchableOpacity>
     );
 }
