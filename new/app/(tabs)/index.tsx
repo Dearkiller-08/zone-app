@@ -2,13 +2,10 @@ import { StatusBar } from "expo-status-bar";
 import { FlatList, StyleSheet, Text, View, LayoutAnimation } from "react-native";
 import TaskCard from "../../component/TaskCard";
 import { theme } from "../../theme";
-import TaskOverviewCard from "../../component/TaskOverviewCard";
-import AddTask from "../../component/AddTask";
-import FilterTask from "../../component/FilterTask";
 import { Task, useTaskStore } from "../../store/taskStore";
 
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 
 
 export default function App() {
@@ -41,8 +38,12 @@ export default function App() {
   return (
     <View style={styles.container}>
         <View style={{ paddingBottom: 10 }}>
-          <TaskOverviewCard />
-          <FilterTask />
+          <View style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginTop: 10,
+          }}>
+          </View>
         </View>
 
         <FlatList
@@ -65,7 +66,6 @@ export default function App() {
           )}
       />
 
-      <AddTask />
       <StatusBar style="auto" />
     </View>
   );

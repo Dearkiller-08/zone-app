@@ -1,5 +1,5 @@
 import { Link, Tabs } from "expo-router";
-import { Pressable, Text } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
@@ -29,17 +29,25 @@ export default function Layout() {
                 },
                 headerRight: () => {
                     return (
-                        <Link
-                        style={{
-                            marginRight: 20
-                        }}
-                        href="/notificationlist" 
-                        asChild
-                        >
-                            <Pressable hitSlop={20}>
-                                <Ionicons name="notifications" size={30} color="black" />
-                            </Pressable>
-                        </Link>
+                        <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+                            <Link href={'/addtaskscreen'} asChild>
+                                <Pressable hitSlop={20}>
+                                    <Ionicons name="add-circle" size={37} color="black" />
+                                </Pressable>
+                            </Link>
+
+                            <Link
+                                style={{
+                                    marginRight: 20
+                                }}
+                                href="/notificationlist" 
+                                asChild
+                            >
+                                <Pressable hitSlop={20}>
+                                    <Ionicons name="notifications" size={35} color="black" />
+                                </Pressable>
+                            </Link>
+                        </View>
                     )
                 }
             }}/>
