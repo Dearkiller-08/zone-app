@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ScrollView, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { theme } from '../theme';
 
@@ -8,6 +8,7 @@ interface CalendarDay {
   dayNumber: number;
   isToday: boolean;
   isSelected: boolean;
+  isPast: boolean;
 }
 
 interface HorizontalCalendarProps {
@@ -17,13 +18,15 @@ interface HorizontalCalendarProps {
 
 export default function HorizontalCalendar({ onDateSelect, selectedDate }: HorizontalCalendarProps) {
   const [days, setDays] = useState<CalendarDay[]>([]);
+  const scrollViewRef = useRef<ScrollView>(null);
+  const [hasInitialScrolled, setHasInitialScrolled] = useState(false);
   const [currentSelectedDate, setCurrentSelectedDate] = useState<Date>(() => {
 
     if (selectedDate && selectedDate instanceof Date && !isNaN(selectedDate.getTime())) {
       return selectedDate;
     }
     return new Date();
-    
+
   });
 
   useEffect(() => {
@@ -36,6 +39,27 @@ export default function HorizontalCalendar({ onDateSelect, selectedDate }: Horiz
     generateDays();
   }, [currentSelectedDate]);
 
+  useEffect(() => {
+    // Auto-scroll to today's date ONLY on initial mount
+    if (days.length > 0 && !hasInitialScrolled) {
+      const todayIndex = days.findIndex(day => day.isToday);
+      if (todayIndex !== -1 && scrollViewRef.current) {
+        // Calculate the scroll position to show today's date at the left
+        // Each day container is approximately 76px wide (68px width + 8px gap)
+        const itemWidth = 76;
+        const scrollPosition = Math.max(0, (todayIndex - 0.5) * itemWidth);
+        
+        setTimeout(() => {
+          scrollViewRef.current?.scrollTo({
+            x: scrollPosition,
+            animated: true
+          });
+          setHasInitialScrolled(true);
+        }, 100);
+      }
+    }
+  }, [days, hasInitialScrolled]);
+
   const generateDays = () => {
     const today = new Date();
     const daysArray: CalendarDay[] = [];
@@ -47,14 +71,15 @@ export default function HorizontalCalendar({ onDateSelect, selectedDate }: Horiz
       setCurrentSelectedDate(safeSelectedDate); // Update state if it was invalid
     }
     
-    // Generate 30 days starting from today
-    for (let i = 0; i < 30; i++) {
+    // Generate 7 past days
+    for (let i = 7; i >= 1; i--) {
       const date = new Date(today);
-      date.setDate(today.getDate() + i);
+      date.setDate(today.getDate() - i);
       
       const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
       const dayNumber = date.getDate();
-      const isToday = i === 0;
+      const isToday = false;
+      const isPast = true;
       const isSelected = safeSelectedDate.toDateString() === date.toDateString();
       
       daysArray.push({
@@ -62,7 +87,29 @@ export default function HorizontalCalendar({ onDateSelect, selectedDate }: Horiz
         dayName,
         dayNumber,
         isToday,
-        isSelected
+        isSelected,
+        isPast
+      });
+    }
+    
+    // Generate today and future days (30 days total)
+    for (let i = 0; i < 30; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() + i);
+      
+      const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+      const dayNumber = date.getDate();
+      const isToday = i === 0;
+      const isPast = false;
+      const isSelected = safeSelectedDate.toDateString() === date.toDateString();
+      
+      daysArray.push({
+        date,
+        dayName,
+        dayNumber,
+        isToday,
+        isSelected,
+        isPast
       });
     }
     
@@ -85,9 +132,14 @@ export default function HorizontalCalendar({ onDateSelect, selectedDate }: Horiz
   return (
     <View style={styles.container}>
       <ScrollView 
+        ref={scrollViewRef}
         horizontal 
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.scrollContainer}
+        snapToInterval={76} // Width of each day container + gap
+        snapToAlignment="start"
+        decelerationRate="fast"
+        pagingEnabled={false}
       >
         {days.map((day, index) => (
           <TouchableOpacity
@@ -95,7 +147,8 @@ export default function HorizontalCalendar({ onDateSelect, selectedDate }: Horiz
             style={[
               styles.dayContainer,
               day.isSelected && styles.selectedDayContainer,
-              day.isToday && !day.isSelected && styles.todayContainer
+              day.isToday && !day.isSelected && styles.todayContainer,
+              day.isPast && !day.isSelected && styles.pastDayContainer
             ]}
             onPress={() => handleDateSelect(day)}
             activeOpacity={0.7}
@@ -103,14 +156,16 @@ export default function HorizontalCalendar({ onDateSelect, selectedDate }: Horiz
             <Text style={[
               styles.dayName,
               day.isSelected && styles.selectedText,
-              day.isToday && !day.isSelected && styles.todayText
+              day.isToday && !day.isSelected && styles.todayText,
+              day.isPast && !day.isSelected && styles.pastText
             ]}>
               {day.dayName}
             </Text>
             <Text style={[
               styles.dayNumber,
               day.isSelected && styles.selectedText,
-              day.isToday && !day.isSelected && styles.todayText
+              day.isToday && !day.isSelected && styles.todayText,
+              day.isPast && !day.isSelected && styles.pastText
             ]}>
               {day.dayNumber}
             </Text>
@@ -144,7 +199,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colorWhite,
     borderWidth: 1,
     borderColor: theme.colorLightGrey,
-    minWidth: 60,
+    width: 68, // Fixed width for consistent snapping
     position: 'relative',
   },
   selectedDayContainer: {
@@ -154,6 +209,9 @@ const styles = StyleSheet.create({
   todayContainer: {
     borderColor: theme.colorSuccessGreen,
     borderWidth: 2,
+  },
+  pastDayContainer: {
+    opacity: 0.8,
   },
   dayName: {
     fontSize: 12,
@@ -171,6 +229,10 @@ const styles = StyleSheet.create({
   },
   todayText: {
     color: theme.colorSuccessGreen,
+  },
+  pastText: {
+    color: theme.colorGrey,
+    opacity: 0.6,
   },
   todayIndicator: {
     position: 'absolute',
