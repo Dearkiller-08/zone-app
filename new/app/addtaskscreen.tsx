@@ -1,24 +1,32 @@
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, Platform } from "react-native";
 import { useState } from "react";
 import { theme } from "../theme";
 import { useTaskStore } from "../store/taskStore";
 import { useRouter } from "expo-router";
 import * as Haptics from 'expo-haptics';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function AddTaskScreen() {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [taskDate, setTaskDate] = useState(new Date());
     const  addTask  = useTaskStore((state) => state.addTask);
     const router = useRouter();
 
     const handleAddTask = () => {
         if (title.trim()) {
             Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-            addTask(title.trim(), description.trim(), false);
+            addTask(title.trim(), description.trim(), false, taskDate);
             setTitle('');
             setDescription('');
+            setTaskDate(new Date());
             router.back();
         }
+    };
+
+    const onDateChange = (event: any, selectedDate?: Date) => {
+        const currentDate = selectedDate || taskDate;
+        setTaskDate(currentDate);
     };
 
     return (
@@ -37,6 +45,32 @@ export default function AddTaskScreen() {
                         marginBottom: 10,
                     }}
                 />
+
+                <View
+                    style={{
+                        width: '90%',
+                        borderWidth: 1,
+                        borderColor: theme.colorGrey,
+                        padding: 0,
+                        borderRadius: 5,
+                        marginBottom: 10,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        backgroundColor: theme.colorWhite,
+                        overflow: 'hidden',
+                        height: 48,
+                    }}
+                >
+                    <DateTimePicker
+                        testID="dateTimePicker"
+                        value={taskDate}
+                        mode="date"
+                        is24Hour={true}
+                        display="default"
+                        onChange={onDateChange}
+                    />
+                </View>
+
                 <TextInput 
                     placeholder="Task Description"
                     value={description}

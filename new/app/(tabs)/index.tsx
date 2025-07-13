@@ -6,10 +6,12 @@ import { Task, useTaskStore } from "../../store/taskStore";
 
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useMemo } from "react";
+import HorizontalCalendar from "../../component/HorizontalCalendar";
 
 
 export default function App() {
   const tasks = useTaskStore((state) => state.tasks);
+  const selectedDate = useTaskStore((state) => state.selectedDate);
 
   const orderTasks = (taskList: Task[]) => {
     return taskList.sort((task1: Task, task2: Task) => {
@@ -31,9 +33,22 @@ export default function App() {
     });
   };
 
+  const handleDateSelect = (date: Date) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    useTaskStore.getState().setSelectedDate(date);
+  };
+
   const sortedTasks = useMemo(() => {
-    return orderTasks([...tasks]);
-  }, [tasks]);
+    // Filter tasks for the selected date
+    const tasksForSelectedDate = tasks.filter(task => {
+      const taskDate = new Date(task.date);
+      const selectedDateOnly = new Date(selectedDate);
+      
+      return taskDate.toDateString() === selectedDateOnly.toDateString();
+    });
+    
+    return orderTasks([...tasksForSelectedDate]);
+  }, [tasks, selectedDate]);
 
   return (
     <View style={styles.container}>
@@ -45,6 +60,11 @@ export default function App() {
           }}>
           </View>
         </View>
+
+        <HorizontalCalendar
+          onDateSelect={handleDateSelect}
+          selectedDate={selectedDate}
+        />
 
         <FlatList
           showsVerticalScrollIndicator={false}
