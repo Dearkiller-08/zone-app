@@ -1,18 +1,54 @@
 import { Link, Tabs } from "expo-router";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, Text, View, StyleSheet } from "react-native";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import { theme } from "../../theme";
+
+function CustomTabBar({ state, navigation }: any) {
+    return (
+        <View style={styles.tabBar}>
+            <Pressable
+                style={styles.tabItem}
+                onPress={() => navigation.navigate('index')}
+            >
+                <Entypo 
+                    name="home" 
+                    size={24} 
+                    color={state.index === 0 ? theme.colorSuccessGreen : theme.colorGrey} 
+                />
+            </Pressable>
+
+            <Link href="/addtaskscreen" asChild>
+                <Pressable style={styles.fabButton}>
+                    <View style={styles.fabContainer}>
+                        <Ionicons name="add" size={28} color={theme.colorWhite} />
+                    </View>
+                </Pressable>
+            </Link>
+
+            <Pressable
+                style={styles.tabItem}
+                onPress={() => navigation.navigate('counter')}
+            >
+                <FontAwesome6 
+                    name="clock-rotate-left" 
+                    size={24} 
+                    color={state.index === 1 ? theme.colorSuccessGreen : theme.colorGrey} 
+                />
+            </Pressable>
+        </View>
+    );
+}
 
 export default function Layout() {
     return(
-        <Tabs>
+        <Tabs
+            tabBar={(props) => <CustomTabBar {...props} />}
+        >
             <Tabs.Screen name="index" options={{
                 headerShadowVisible: false,
                 headerTitle: '',
-                tabBarShowLabel: false,
-                tabBarIconStyle: {marginTop: 20},
-                tabBarIcon: () => <Entypo name="home" size={24} color="black" />,
                 headerLeft: () => {
                     return(
                         <Text
@@ -30,12 +66,6 @@ export default function Layout() {
                 headerRight: () => {
                     return (
                         <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-                            <Link href={'/addtaskscreen'} asChild>
-                                <Pressable hitSlop={20}>
-                                    <Ionicons name="add-circle" size={37} color="black" />
-                                </Pressable>
-                            </Link>
-
                             <Link
                                 style={{
                                     marginRight: 20
@@ -51,11 +81,49 @@ export default function Layout() {
                     )
                 }
             }}/>
-            <Tabs.Screen name="counter" options={{
-                tabBarShowLabel: false,
-                tabBarIconStyle: {marginTop: 20},
-                tabBarIcon: () => <FontAwesome6 name="clock-rotate-left" size={24} color="black" />,
-            }}/>
+            
+            <Tabs.Screen name="counter" options={{}}/>
         </Tabs>
     );
 }
+
+const styles = StyleSheet.create({
+    tabBar: {
+        flexDirection: 'row',
+        height: 90,
+        backgroundColor: 'white',
+        borderTopWidth: 1,
+        borderTopColor: '#e1e1e1',
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        paddingBottom: 20,
+        paddingTop: 10,
+    },
+    tabItem: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingTop: 10,
+    },
+    fabButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    fabContainer: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        backgroundColor: theme.colorBlack,
+        justifyContent: 'center',
+        alignItems: 'center',
+        elevation: 8,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.3,
+        shadowRadius: 4.65,
+    },
+});
