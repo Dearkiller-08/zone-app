@@ -64,6 +64,7 @@ export default function App() {
         <HorizontalCalendar
           onDateSelect={handleDateSelect}
           selectedDate={selectedDate}
+          tasks={tasks}
         />
 
         <FlatList

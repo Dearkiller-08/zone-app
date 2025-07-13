@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ScrollView, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { theme } from '../theme';
+import { Task } from '../store/taskStore';
 
 interface CalendarDay {
   date: Date;
@@ -9,14 +10,17 @@ interface CalendarDay {
   isToday: boolean;
   isSelected: boolean;
   isPast: boolean;
+  hasTask: boolean;
+  taskCount: number;
 }
 
 interface HorizontalCalendarProps {
   onDateSelect?: (date: Date) => void;
   selectedDate?: Date;
+  tasks?: Task[];
 }
 
-export default function HorizontalCalendar({ onDateSelect, selectedDate }: HorizontalCalendarProps) {
+export default function HorizontalCalendar({ onDateSelect, selectedDate, tasks = [] }: HorizontalCalendarProps) {
   const [days, setDays] = useState<CalendarDay[]>([]);
   const scrollViewRef = useRef<ScrollView>(null);
   const [hasInitialScrolled, setHasInitialScrolled] = useState(false);
@@ -37,7 +41,7 @@ export default function HorizontalCalendar({ onDateSelect, selectedDate }: Horiz
 
   useEffect(() => {
     generateDays();
-  }, [currentSelectedDate]);
+  }, [currentSelectedDate, tasks]);
 
   useEffect(() => {
     if (days.length > 0 && !hasInitialScrolled) {
@@ -57,6 +61,13 @@ export default function HorizontalCalendar({ onDateSelect, selectedDate }: Horiz
       }
     }
   }, [days, hasInitialScrolled]);
+
+  const getTasksForDate = (date: Date) => {
+    return tasks.filter(task => {
+      const taskDate = new Date(task.date);
+      return taskDate.toDateString() === date.toDateString();
+    });
+  };
 
   const generateDays = () => {
     const today = new Date();
@@ -78,13 +89,19 @@ export default function HorizontalCalendar({ onDateSelect, selectedDate }: Horiz
       const isPast = true;
       const isSelected = safeSelectedDate.toDateString() === date.toDateString();
       
+      const tasksForDay = getTasksForDate(date);
+      const hasTask = tasksForDay.length > 0;
+      const taskCount = tasksForDay.length;
+      
       daysArray.push({
         date,
         dayName,
         dayNumber,
         isToday,
         isSelected,
-        isPast
+        isPast,
+        hasTask,
+        taskCount
       });
     }
     
@@ -98,13 +115,19 @@ export default function HorizontalCalendar({ onDateSelect, selectedDate }: Horiz
       const isPast = false;
       const isSelected = safeSelectedDate.toDateString() === date.toDateString();
       
+      const tasksForDay = getTasksForDate(date);
+      const hasTask = tasksForDay.length > 0;
+      const taskCount = tasksForDay.length;
+      
       daysArray.push({
         date,
         dayName,
         dayNumber,
         isToday,
         isSelected,
-        isPast
+        isPast,
+        hasTask,
+        taskCount
       });
     }
     
@@ -168,6 +191,22 @@ export default function HorizontalCalendar({ onDateSelect, selectedDate }: Horiz
                 styles.todayIndicator,
                 day.isSelected && styles.selectedTodayIndicator
               ]} />
+            )}
+            {day.hasTask && (
+              <View style={[
+                styles.taskIndicator,
+                day.isSelected && styles.selectedTaskIndicator,
+                day.isToday && !day.isSelected && styles.todayTaskIndicator
+              ]}>
+                {day.taskCount > 1 && (
+                  <Text style={[
+                    styles.taskCount,
+                    day.isSelected && styles.selectedTaskCount
+                  ]}>
+                    {day.taskCount}
+                  </Text>
+                )}
+              </View>
             )}
           </TouchableOpacity>
         ))}
@@ -238,5 +277,30 @@ const styles = StyleSheet.create({
   },
   selectedTodayIndicator: {
     backgroundColor: theme.colorWhite,
+  },
+  taskIndicator: {
+    position: 'absolute',
+    top: 4,
+    right: 4,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: theme.colorBlack,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  selectedTaskIndicator: {
+    backgroundColor: theme.colorWhite,
+  },
+  todayTaskIndicator: {
+    backgroundColor: theme.colorSuccessGreen,
+  },
+  taskCount: {
+    color: theme.colorWhite,
+    fontSize: 8,
+    fontWeight: 'bold',
+  },
+  selectedTaskCount: {
+    color: theme.colorBlack,
   },
 });
