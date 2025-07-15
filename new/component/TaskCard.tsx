@@ -7,6 +7,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 
 import * as Haptics from 'expo-haptics'; 
 import { Task, useTaskStore } from "../store/taskStore";
+import { Link } from "expo-router";
 
 interface TaskCardProps {
     task: Task;
@@ -58,31 +59,34 @@ export default function TaskCard({ task }: TaskCardProps) {
                 </View>
             </Pressable>
             
-            <TouchableOpacity 
-                onPress={() => {}}
-                activeOpacity={0.5}
-                style={{ flex: 1  }}
-            >
-                <View style={styles.textDetailsContainer}>
-                    <Text style={[{ 
-                        fontSize: 18, 
-                        fontWeight: 'bold'
-                    }, task.completed ? { 
-                        opacity: 0.5,
-                        } : undefined]}>{task.title}</Text>
-                    
-                    {task.description ? (
-                        <Text 
-                        style={[{ 
-                            fontSize: 14, 
-                            color: theme.colorGrey 
+            <Link href={`/tasks/${task.id}`} asChild>
+                <TouchableOpacity 
+                    onPress={() => {}}
+                    activeOpacity={0.5}
+                    style={{ flex: 1  }}
+                >
+                    <View style={styles.textDetailsContainer}>
+                        <Text style={[{ 
+                            fontSize: 18, 
+                            fontWeight: 'bold'
                         }, task.completed ? { 
                             opacity: 0.5,
-                        } : undefined]}
-                        numberOfLines={2}>{task.description}</Text>
-                    ) : undefined}
-                </View>
-            </TouchableOpacity>
+                            } : undefined]}>{task.title}</Text>
+                        
+                        {task.description ? (
+                            <Text 
+                            style={[{ 
+                                fontSize: 14, 
+                                color: theme.colorGrey 
+                            }, task.completed ? { 
+                                opacity: 0.5,
+                            } : undefined]}
+                            numberOfLines={2}>{task.description}</Text>
+                        ) : undefined}
+                    </View>
+                </TouchableOpacity>
+            </Link>
+
 
             <Pressable 
                 hitSlop={20}

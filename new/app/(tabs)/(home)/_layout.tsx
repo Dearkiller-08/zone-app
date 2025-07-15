@@ -9,6 +9,13 @@ export default function Layout() {
                     headerShown: false,
                 }}
             />
+            <Stack.Screen 
+                name="tasks/[taskId]"
+                options={{
+                    title: 'Task Details',
+                    presentation: 'modal',
+                }}
+            />
         </Stack>
     )
 }

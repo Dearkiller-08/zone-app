@@ -84,7 +84,9 @@ export default function Layout() {
                 }
             }}/>
             
-            <Tabs.Screen name="counter" options={{}}/>
+            <Tabs.Screen name="counter" options={{
+                headerShown: false,
+            }}/>
         </Tabs>
     );
 }
