@@ -6,16 +6,18 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { theme } from "../../theme";
 
 function CustomTabBar({ state, navigation }: any) {
+    const currentRoute = state.routes[state.index].name;
+    
     return (
         <View style={styles.tabBar}>
             <Pressable
                 style={styles.tabItem}
-                onPress={() => navigation.navigate('index')}
+                onPress={() => navigation.navigate('(home)')}
             >
                 <Entypo 
                     name="home" 
                     size={24} 
-                    color={state.index === 0 ? theme.colorSuccessGreen : theme.colorGrey} 
+                    color={currentRoute === '(home)' ? theme.colorSuccessGreen : theme.colorGrey} 
                 />
             </Pressable>
 
@@ -34,7 +36,7 @@ function CustomTabBar({ state, navigation }: any) {
                 <FontAwesome6 
                     name="clock-rotate-left" 
                     size={24} 
-                    color={state.index === 1 ? theme.colorSuccessGreen : theme.colorGrey} 
+                    color={currentRoute === 'counter' ? theme.colorSuccessGreen : theme.colorGrey} 
                 />
             </Pressable>
         </View>
@@ -46,7 +48,7 @@ export default function Layout() {
         <Tabs
             tabBar={(props) => <CustomTabBar {...props} />}
         >
-            <Tabs.Screen name="index" options={{
+            <Tabs.Screen name="(home)" options={{
                 headerShadowVisible: false,
                 headerTitle: '',
                 headerLeft: () => {

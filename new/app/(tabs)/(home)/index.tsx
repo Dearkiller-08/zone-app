@@ -1,12 +1,12 @@
 import { StatusBar } from "expo-status-bar";
 import { FlatList, StyleSheet, Text, View, LayoutAnimation } from "react-native";
-import TaskCard from "../../component/TaskCard";
-import { theme } from "../../theme";
-import { Task, useTaskStore } from "../../store/taskStore";
+import TaskCard from "../../../component/TaskCard";
+import { theme } from "../../../theme";
+import { Task, useTaskStore } from "../../../store/taskStore";
 
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useMemo } from "react";
-import HorizontalCalendar from "../../component/HorizontalCalendar";
+import HorizontalCalendar from "../../../component/HorizontalCalendar";
 
 
 export default function App() {
@@ -39,7 +39,6 @@ export default function App() {
   };
 
   const sortedTasks = useMemo(() => {
-    // Filter tasks for the selected date
     const tasksForSelectedDate = tasks.filter(task => {
       const taskDate = new Date(task.date);
       const selectedDateOnly = new Date(selectedDate);
@@ -52,15 +51,6 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-        <View style={{ paddingBottom: 10 }}>
-          <View style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginTop: 10,
-          }}>
-          </View>
-        </View>
-
         <HorizontalCalendar
           onDateSelect={handleDateSelect}
           selectedDate={selectedDate}
@@ -68,6 +58,7 @@ export default function App() {
         />
 
         <FlatList
+          contentContainerStyle={{ paddingTop: 10 }}
           showsVerticalScrollIndicator={false}
           data={sortedTasks}
           renderItem={({item}) => {
