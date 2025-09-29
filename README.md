@@ -1,85 +1,36 @@
-# 📝 Simple Task Planner (WORK IN PROGRESS)
+# Zone App v1
 
-Welcome to the **Simple Task Planner** app! This project is a simple task or to-do planner that I created to learn React Native. The app is built using **React Native** and **Supabase** for the backend.
+A lightweight task planning & focus tracking mobile app built with Expo Router, React Native, TypeScript, and Zustand. It provides a calendar-centric daily task list, persistence, basic time tracking for a running task, and local in‑app notification state (ready for integration with push notifications).
 
-## 📱 Features
+## Features
 
-- Add, edit, and delete tasks
-- Mark tasks as completed
-- Organize tasks by categories
-- Real-time updates with Supabase
+- Horizontal scrolling calendar to pick a day and view its tasks
+- Daily task list filtered by the selected date
+- Create tasks with title, description, date (defaults to selected day)
+- Toggle completion & reorder logic (incomplete tasks float to top)
+- Local persisted state with Zustand + AsyncStorage (tasks & notifications)
+- Time tracking metadata for a single running task (start/stop + elapsed seconds)
+- In‑app notification store (upcoming task start, task completed placeholders)
+- Layout animations on date change for a smoother UX
+- TypeScript throughout for safer refactors
 
-## 🛠️ Technologies
+## Tech Stack
 
-- **React Native**: For building the mobile application.
-- **Expo**: To assist in development, build, and deploy React Native apps.
-- **Supabase**: For the backend, including database, authentication, and real-time updates.
+- **Expo 54 / React Native 0.81** with **Expo Router** for file‑system based navigation
+- **TypeScript** for static typing
+- **Zustand** (with `persist` + AsyncStorage) for state management
+- **date-fns** for date utilities
+- **Expo Notifications / Device / Constants** (scaffolded for permission + future push logic)
+- **ESLint + Prettier** for linting & formatting
 
-## 🚀 Getting Started
+## Getting Started
 
-### Prerequisites
-
-- Install **Node.js** from [nodejs.org](https://nodejs.org/)
-- Install **Expo CLI** by running the following command:
-
-  ```bash
-  npm install -g expo-cli
-Install Expo Go on your mobile device from the App Store (iOS) or Google Play (Android).
-Installation
-Clone the repository:
-
-bash
-Copy code
-git clone https://github.com/TeddyChristian/zone-app.git
-cd zone-app
-Install the dependencies:
-
-npm install
-
-Start the development server:
-
-expo start
-
-Scan the QR code displayed in the terminal or Metro Bundler page with Expo Go.
-
-
-📸 Screenshots
-
-<img src="./assets/readme/zone-1.jpg" width="30%" /> 
-<img src="./assets/readme/zone-2.jpg" width="30%" /> 
-<img src="./assets/readme/zone-3.jpg" width="30%" />
-<img src="./assets/readme/zone-4.jpg" width="30%" />
-<img src="./assets/readme/zone-5.jpg" width="30%" />
-<img src="./assets/readme/zone-preview-qr-code.png" width="30%" />
-
-🌐 Backend Setup
-
-Create a new project in Supabase.
-
-Copy your Supabase URL and anon key.
-
-Create a .env file in the root of your project and add the 
-
-following:
-
-SUPABASE_URL=your-supabase-url
-SUPABASE_ANON_KEY=your-supabase-anon-key
-
-💡 Learning Objectives
-
-This project helped me learn and understand the following:
-
-Basics of React Native
-Using Expo for development and deployment
-Setting up and using Supabase for backend services
-Handling user authentication and real-time data
-
-🤝 Contributing
-
-Contributions, issues, and feature requests are welcome! Feel free to check the issues page.
-
-Fork the project
-
-Create your feature branch (git checkout -b feature/AmazingFeature)
-Commit your changes (git commit -m 'Add some AmazingFeature')
-Push to the branch (git push origin feature/AmazingFeature)
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Start the development server:
+   ```bash
+   npm run start
+   ```
+   Then press a (Android), i (iOS simulator on macOS), or w (Web) in the Expo CLI.
