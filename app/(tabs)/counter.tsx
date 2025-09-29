@@ -1,4 +1,5 @@
 import { Text, View, StyleSheet, TouchableOpacity, Alert, useWindowDimensions } from "react-native";
+import { useRouter } from "expo-router";
 import { theme } from "../../theme";
 import { registerForPushNotificationsAsync } from "../../utils/registerForPushNotificationsAsync";
 import * as Notifications from "expo-notifications";
@@ -25,6 +26,7 @@ type TimerStatus = {
 }
 
 export default function Counter() {
+  const router = useRouter();
   const confettiRef = useRef<any>(undefined);
   const { width } = useWindowDimensions();
   const [timerState, setTimerState] = useState<PersistedTimerState | null>(null);
@@ -40,19 +42,25 @@ export default function Counter() {
   useEffect(() => {
     const init = async () => {
       const value = await getFromStorage(taskTimerStorageKey);
-      if (value && runningTask && value.taskId === runningTask.taskId) {
-        setTimerState(value);
-      } else if (runningTask) {
-        // Create new timer state for running task
-        const newState: PersistedTimerState = {
-          currentNotificationId: undefined,
-          taskId: runningTask.taskId,
-          startTime: runningTask.startTime.getTime(),
-          totalElapsed: runningTask.elapsedTime,
-          isRunning: true,
-        };
-        setTimerState(newState);
-        await saveToStorage(taskTimerStorageKey, newState);
+      if (runningTask) {
+        if (value && value.taskId === runningTask.taskId && value.isRunning) {
+          setTimerState(value);
+          const now = Date.now();
+          const elapsed = Math.floor((now - value.startTime) / 1000) + value.totalElapsed;
+          const duration = intervalToDuration({ start: 0, end: elapsed * 1000 });
+          setStatus({ duration });
+        } else {
+          const newState: PersistedTimerState = {
+            currentNotificationId: undefined,
+            taskId: runningTask.taskId,
+            startTime: runningTask.startTime.getTime(),
+            totalElapsed: 0,
+            isRunning: true,
+          };
+          setTimerState(newState);
+          await saveToStorage(taskTimerStorageKey, newState);
+          setStatus({ duration: intervalToDuration({ start: 0, end: 0 }) });
+        }
       } else {
         setTimerState(null);
       }
@@ -104,26 +112,27 @@ export default function Counter() {
       await Notifications.cancelScheduledNotificationAsync(timerState.currentNotificationId);
     }
 
-    // Mark task as completed
     toggleTaskCompleted(currentTask.id);
     
-    // Stop the timer
     stopTask();
     setTimerState(null);
     await saveToStorage(taskTimerStorageKey, null);
+    router.replace('/(tabs)/(home)');
   };
 
   const handleStopTimer = async () => {
     if (!timerState) return;
-
+    const currentElapsed = Math.floor((Date.now() - timerState.startTime) / 1000) + timerState.totalElapsed;
     const updatedState = {
       ...timerState,
+      totalElapsed: currentElapsed,
       isRunning: false,
     };
     
     setTimerState(updatedState);
     await saveToStorage(taskTimerStorageKey, updatedState);
     stopTask();
+    router.replace('/(tabs)/(home)');
   };
     
   if (!currentTask || !timerState) {

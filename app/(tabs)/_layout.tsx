@@ -4,9 +4,13 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { theme } from "../../theme";
+import { useTaskStore } from "../../store/taskStore";
 
 function CustomTabBar({ state, navigation }: any) {
     const currentRoute = state.routes[state.index].name;
+    const runningTask = useTaskStore(s => s.runningTask);
+
+    if (currentRoute === 'counter' && runningTask) return null;
     
     return (
         <View style={styles.tabBar}>
@@ -64,23 +68,6 @@ export default function Layout() {
                             Zone
                         </Text>
                     );
-                },
-                headerRight: () => {
-                    return (
-                        <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-                            <Link
-                                style={{
-                                    marginRight: 20
-                                }}
-                                href="/notificationlist" 
-                                asChild
-                            >
-                                <Pressable hitSlop={20}>
-                                    <Ionicons name="notifications" size={35} color="black" />
-                                </Pressable>
-                            </Link>
-                        </View>
-                    )
                 }
             }}/>
             

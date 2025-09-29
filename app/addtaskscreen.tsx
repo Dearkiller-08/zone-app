@@ -34,6 +34,7 @@ export default function AddTaskScreen() {
             <View style={{ width: '100%', alignItems: 'center' }}>
                 <TextInput 
                     placeholder="Task Title"
+                    placeholderTextColor={'grey'}
                     value={title}
                     onChangeText={setTitle}
                     style={{
@@ -69,11 +70,18 @@ export default function AddTaskScreen() {
                         display="default"
                         onChange={onDateChange}
                         minimumDate={new Date()}
+                        style={{
+                            backgroundColor: 'black',
+                            paddingRight: 8,
+                            marginLeft: 8,
+                            borderRadius: 10
+                        }}
                     />
                 </View>
 
                 <TextInput 
                     placeholder="Task Description"
+                    placeholderTextColor={'grey'}
                     value={description}
                     onChangeText={setDescription}
                     style={{

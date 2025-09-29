@@ -186,12 +186,6 @@ export default function HorizontalCalendar({ onDateSelect, selectedDate, tasks =
             ]}>
               {day.dayNumber}
             </Text>
-            {day.isToday && (
-              <View style={[
-                styles.todayIndicator,
-                day.isSelected && styles.selectedTodayIndicator
-              ]} />
-            )}
             {day.hasTask && (
               <View style={[
                 styles.taskIndicator,
@@ -241,7 +235,8 @@ const styles = StyleSheet.create({
   },
   todayContainer: {
     borderColor: theme.colorSuccessGreen,
-    borderWidth: 2,
+    backgroundColor: theme.colorSuccessGreen,
+    borderWidth: 1,
   },
   pastDayContainer: {
     opacity: 0.8,
@@ -261,19 +256,11 @@ const styles = StyleSheet.create({
     color: theme.colorWhite,
   },
   todayText: {
-    color: theme.colorSuccessGreen,
+    color: theme.colorWhite,
   },
   pastText: {
     color: theme.colorGrey,
     opacity: 0.6,
-  },
-  todayIndicator: {
-    position: 'absolute',
-    bottom: 4,
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: theme.colorSuccessGreen,
   },
   selectedTodayIndicator: {
     backgroundColor: theme.colorWhite,
