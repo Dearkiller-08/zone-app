@@ -68,23 +68,6 @@ export default function Layout() {
                             Zone
                         </Text>
                     );
-                },
-                headerRight: () => {
-                    return (
-                        <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-                            <Link
-                                style={{
-                                    marginRight: 20
-                                }}
-                                href="/notificationlist" 
-                                asChild
-                            >
-                                <Pressable hitSlop={20}>
-                                    <Ionicons name="notifications" size={35} color="black" />
-                                </Pressable>
-                            </Link>
-                        </View>
-                    )
                 }
             }}/>
             

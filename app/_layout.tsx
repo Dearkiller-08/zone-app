@@ -14,9 +14,6 @@ export default function Layout() {
                 title: "Add Task",
                 presentation: "modal"
             }}/>
-            <Stack.Screen name="notificationlist" options={{
-                title: "Notifications",
-            }}/>
         </Stack>
     )
 }
