@@ -3,8 +3,7 @@ import { FlatList, StyleSheet, Text, View, LayoutAnimation } from "react-native"
 import TaskCard from "../../../component/TaskCard";
 import { theme } from "../../../theme";
 import { Task, useTaskStore } from "../../../store/taskStore";
-
-import AntDesign from '@expo/vector-icons/AntDesign';
+import Octicons from '@expo/vector-icons/Octicons';
 import { useMemo } from "react";
 import HorizontalCalendar from "../../../component/HorizontalCalendar";
 
@@ -51,31 +50,31 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-        <HorizontalCalendar
-          onDateSelect={handleDateSelect}
-          selectedDate={selectedDate}
-          tasks={tasks}
-        />
+      <HorizontalCalendar
+        onDateSelect={handleDateSelect}
+        selectedDate={selectedDate}
+        tasks={tasks}
+      />
 
-        <FlatList
-          contentContainerStyle={{ paddingTop: 10 }}
-          showsVerticalScrollIndicator={false}
-          data={sortedTasks}
-          renderItem={({item}) => {
-            return (
-              <TaskCard task={item}/>
-            );
-          }}
-          ListEmptyComponent={() => (
-            <View style={{ backgroundColor: theme.colorWhite, marginTop: 150 }}>
-              <View style={{  opacity: 0.3, justifyContent: "center", alignItems: "center"}}>
-                <AntDesign name="frowno" size={40} color="black" />
-                <Text style={{ fontSize: 20, color: theme.colorBlack, marginTop: 10 }}>
-                  No tasks available
-                </Text>
-              </View>
+      <FlatList
+        contentContainerStyle={{ paddingTop: 10 }}
+        showsVerticalScrollIndicator={false}
+        data={sortedTasks}
+        renderItem={({item}) => {
+          return (
+            <TaskCard task={item}/>
+          );
+        }}
+        ListEmptyComponent={() => (
+          <View style={{ backgroundColor: theme.colorWhite, marginTop: 150 }}>
+            <View style={{  opacity: 0.3, justifyContent: "center", alignItems: "center"}}>
+              <Octicons name="database" size={40} color="black" />
+              <Text style={{ fontSize: 20, color: theme.colorBlack, marginTop: 10 }}>
+                No tasks available
+              </Text>
             </View>
-          )}
+          </View>
+        )}
       />
 
       <StatusBar style="auto" />
@@ -88,5 +87,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colorWhite,
     paddingHorizontal: 10,
+    paddingVertical: 8,
   },
 });
